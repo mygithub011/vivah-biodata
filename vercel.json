@@ -1,0 +1,18 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
+  "functions": {
+    "app/api/generate-pdf/route.ts": {
+      "maxDuration": 60,
+      "memory": 3008
+    },
+    "app/api/payment/create-order/route.ts": {
+      "maxDuration": 10
+    },
+    "app/api/payment/verify/route.ts": {
+      "maxDuration": 10
+    }
+  },
+  "regions": ["bom1"]
+}

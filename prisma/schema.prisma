@@ -1,0 +1,47 @@
+// This is your Prisma schema file
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Biodata {
+  id              String   @id @default(cuid())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  formData        Json
+
+  collectionId    String
+  templateId      String
+
+  tier            String   @default("free")
+  paymentOrderId  String?  @unique
+  paymentStatus   String   @default("pending")
+  downloadToken   String?  @unique
+  downloadCount   Int      @default(0)
+  paidAt          DateTime?
+
+  photoStorageKey String?
+  contactPhone    String?
+  contactEmail    String?
+  ipHash          String?
+}
+
+model PaymentOrder {
+  id              String   @id @default(cuid())
+  createdAt       DateTime @default(now())
+
+  razorpayOrderId String   @unique
+  biodataId       String
+  amount          Int
+  currency        String   @default("INR")
+  tier            String
+  status          String   @default("created")
+
+  paymentId       String?
+  signature       String?
+}
