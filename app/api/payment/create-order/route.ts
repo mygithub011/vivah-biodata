@@ -44,6 +44,8 @@ export async function POST(request: NextRequest) {
     // Generate a local biodataId — works with or without a database
     const biodataId = uuidv4();
 
+    let dbBiodataId: string | null = null;
+
     // Persist to DB if available (non-blocking — won't fail if DB is not set up)
     try {
       const biodata = await prisma.biodata.create({
@@ -57,10 +59,7 @@ export async function POST(request: NextRequest) {
           contactEmail: formData.contact?.email,
         },
       });
-      // Use DB-assigned id if available
-      if (biodata?.id) {
-        // We'll use the local UUID as receipt key regardless
-      }
+      dbBiodataId = biodata.id;
     } catch {
       // DB unavailable — continue with local UUID
     }
@@ -72,6 +71,22 @@ export async function POST(request: NextRequest) {
       receipt: `bio_${biodataId.slice(0, 20)}`,
       notes: { biodataId, tier },
     });
+
+    // Persist the order record for webhook verification if DB is available
+    try {
+      await prisma.paymentOrder.create({
+        data: {
+          razorpayOrderId: order.id,
+          biodataId: dbBiodataId ?? biodataId,
+          amount: order.amount,
+          currency: order.currency,
+          tier,
+          status: "created",
+        },
+      });
+    } catch {
+      // DB unavailable or already exists
+    }
 
     return NextResponse.json({
       orderId: order.id,

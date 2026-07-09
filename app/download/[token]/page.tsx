@@ -40,11 +40,8 @@ export default async function DownloadPage({ params }: Params) {
       )}
 
       <DownloadClient
-        biodataId={biodata?.id ?? ""}
-        templateId={biodata?.templateId ?? ""}
-        tier={biodata?.tier ?? "premium"}
         token={token}
-        formData={(biodata?.formData as object) ?? {}}
+        tier={(biodata?.tier as string) ?? "premium"}
       />
 
       <div className="mt-10 p-6 bg-amber-50 rounded-2xl border border-amber-100">

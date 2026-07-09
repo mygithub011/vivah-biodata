@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getTemplateById } from "@/lib/templates/collections";
+import { prisma } from "@/lib/db";
 import { BiodataFormData } from "@/types";
 import { formatDate, calculateAge } from "@/lib/utils";
 
@@ -31,18 +32,48 @@ async function getBrowser() {
 
 // POST /api/generate-pdf
 export async function POST(request: NextRequest) {
-  const { formData, templateId, tier } = await request.json() as {
-    formData: Partial<BiodataFormData>;
-    templateId: string;
+  const { downloadToken, formData, templateId, tier } = await request.json() as {
+    downloadToken?: string;
+    formData?: Partial<BiodataFormData>;
+    templateId?: string;
     tier: "free" | "premium" | "premium_plus";
   };
 
-  const template = getTemplateById(templateId);
+  let trustedFormData: Partial<BiodataFormData> | undefined = formData;
+  let trustedTemplateId: string | undefined = templateId;
+
+  if (tier !== "free") {
+    if (!downloadToken) {
+      return NextResponse.json({ error: "Download token required for paid PDF generation" }, { status: 401 });
+    }
+
+    const biodata = await prisma.biodata.findUnique({
+      where: { downloadToken },
+      select: { formData: true, templateId: true, tier: true, paymentStatus: true },
+    });
+
+    if (!biodata || biodata.paymentStatus !== "paid" || biodata.tier !== tier) {
+      return NextResponse.json({ error: "Invalid or expired download token" }, { status: 403 });
+    }
+
+    trustedFormData = biodata.formData as Partial<BiodataFormData>;
+    trustedTemplateId = biodata.templateId;
+  }
+
+  if (!trustedTemplateId) {
+    return NextResponse.json({ error: "Template ID is required" }, { status: 400 });
+  }
+
+  const template = getTemplateById(trustedTemplateId);
   if (!template) {
     return NextResponse.json({ error: "Template not found" }, { status: 404 });
   }
 
-  const html = buildBiodataHTML(formData, template, tier === "free");
+  if (!trustedFormData) {
+    return NextResponse.json({ error: "Form data is required" }, { status: 400 });
+  }
+
+  const html = buildBiodataHTML(trustedFormData, template, tier === "free");
 
   try {
     const browser = await getBrowser();
@@ -60,7 +91,7 @@ export async function POST(request: NextRequest) {
     return new NextResponse(Buffer.from(pdf), {
       headers: {
         "Content-Type": "application/pdf",
-        "Content-Disposition": `attachment; filename="shaadibio-${formData.personal?.fullName ?? "biodata"}.pdf"`,
+        "Content-Disposition": `attachment; filename="shaadibio-${trustedFormData.personal?.fullName ?? "biodata"}.pdf"`,
       },
     });
   } catch (err) {
