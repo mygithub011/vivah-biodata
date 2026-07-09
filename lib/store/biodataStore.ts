@@ -124,7 +124,6 @@ export const useBiodataStore = create<BiodataStore>()(
     {
       name: "shaadibio-store",
       partialize: (s) => ({
-        formData: s.formData,
         selectedCollectionId: s.selectedCollectionId,
         selectedTemplateId: s.selectedTemplateId,
         currentStep: s.currentStep,

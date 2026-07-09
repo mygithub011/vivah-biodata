@@ -13,13 +13,35 @@ interface DownloadClientProps {
 
 export default function DownloadClient({ biodataId, templateId, tier, token, formData }: DownloadClientProps) {
   const [loading, setLoading] = useState(false);
+  const [payload, setPayload] = useState<{ formData: object; templateId: string; tier: string } | null>(
+    formData && Object.keys(formData).length > 0 ? { formData, templateId, tier } : null
+  );
+
+  useState(() => {
+    if (!payload) {
+      try {
+        const cached = window.localStorage.getItem(`shaadibio_download_${token}`);
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          setPayload(parsed);
+        }
+      } catch {
+        // ignore parse/localStorage errors
+      }
+    }
+  });
 
   const handleDownload = async () => {
+    if (!payload) {
+      alert("Unable to restore your biodata data. Please retry the payment flow or contact support.");
+      return;
+    }
+
     setLoading(true);
     const res = await fetch("/api/generate-pdf", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ formData, templateId, tier }),
+      body: JSON.stringify(payload),
     });
 
     if (res.ok) {

@@ -10,31 +10,41 @@ interface Params {
 export default async function DownloadPage({ params }: Params) {
   const { token } = await params;
 
-  const biodata = await prisma.biodata.findUnique({
-    where: { downloadToken: token },
-  });
-
-  if (!biodata || biodata.paymentStatus !== "paid") {
-    notFound();
+  let biodata = null;
+  try {
+    biodata = await prisma.biodata.findUnique({
+      where: { downloadToken: token },
+    });
+  } catch {
+    biodata = null;
   }
+
+  const serverDataAvailable = Boolean(biodata && biodata.paymentStatus === "paid");
 
   return (
     <div className="max-w-2xl mx-auto px-6 py-20 text-center">
-      {/* Success header */}
       <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center text-4xl mx-auto mb-6">
         ✅
       </div>
       <h1 className="text-3xl font-bold text-gray-900 mb-3">Payment Successful!</h1>
-      <p className="text-gray-500 text-lg mb-8">
+      <p className="text-gray-500 text-lg mb-4">
         Your premium biodata is ready. Download it now in HD quality.
       </p>
+      {!serverDataAvailable && (
+        <div className="mb-6 p-4 rounded-2xl bg-yellow-50 border border-yellow-100 text-left text-sm text-yellow-900">
+          <p className="font-semibold">Server record not found.</p>
+          <p>
+            If you just completed a payment in this browser, your biodata can still be restored from this session. Please do not refresh the page while the download completes.
+          </p>
+        </div>
+      )}
 
       <DownloadClient
-        biodataId={biodata.id}
-        templateId={biodata.templateId}
-        tier={biodata.tier}
+        biodataId={biodata?.id ?? ""}
+        templateId={biodata?.templateId ?? ""}
+        tier={biodata?.tier ?? "premium"}
         token={token}
-        formData={biodata.formData as object}
+        formData={(biodata?.formData as object) ?? {}}
       />
 
       <div className="mt-10 p-6 bg-amber-50 rounded-2xl border border-amber-100">
@@ -50,7 +60,7 @@ export default async function DownloadPage({ params }: Params) {
       </div>
 
       <div className="mt-8 text-sm text-gray-400">
-        <p>Download link is valid for 7 days. Order ID: {biodata.paymentOrderId}</p>
+        <p>Download link is valid for 7 days. Order ID: {biodata?.paymentOrderId ?? "N/A"}</p>
         <Link href="/" className="text-red-700 hover:underline mt-2 block">
           ← Create Another Biodata
         </Link>

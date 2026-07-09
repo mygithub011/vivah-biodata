@@ -24,8 +24,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Missing payment fields" }, { status: 400 });
     }
 
+    const secret = process.env.RAZORPAY_KEY_SECRET;
+
+    if (!secret) {
+      return NextResponse.json(
+        { error: "Razorpay secret is not configured. Add RAZORPAY_KEY_SECRET in Vercel Environment Variables and redeploy." },
+        { status: 500 }
+      );
+    }
+
     // HMAC-SHA256 signature verification
-    const secret = process.env.RAZORPAY_KEY_SECRET!;
     const expectedSignature = crypto
       .createHmac("sha256", secret)
       .update(`${razorpay_order_id}|${razorpay_payment_id}`)

@@ -78,7 +78,8 @@ export default function PreviewStep({ template }: PreviewStepProps) {
     });
 
     if (!orderRes.ok) {
-      alert("Failed to create payment order. Please try again.");
+      const errorData = await orderRes.json().catch(() => null);
+      alert(errorData?.error || "Failed to create payment order. Please try again.");
       setPayLoading(false);
       return;
     }
@@ -108,6 +109,14 @@ export default function PreviewStep({ template }: PreviewStepProps) {
             const { downloadToken } = await verifyRes.json();
             setPaymentStatus("paid");
             setDownloadToken(downloadToken);
+            try {
+              window.localStorage.setItem(
+                `shaadibio_download_${downloadToken}`,
+                JSON.stringify({ formData, templateId: activeTemplateId, tier: selectedTier })
+              );
+            } catch {
+              // ignore localStorage errors
+            }
             router.push(`/download/${downloadToken}`);
           } else {
             alert("Payment verification failed. Please contact support at support@shaadibio.com");
