@@ -23,7 +23,7 @@ const schema = z.object({
   gotra: z.string().optional(),
   nakshatra: z.string().optional(),
   rashi: z.string().optional(),
-  manglik: z.enum(["Yes", "No", "Partial"]).optional(),
+  manglik: z.union([z.enum(["Yes", "No", "Partial"]), z.literal("")]).optional(),
   language: z.string().optional(),
 });
 

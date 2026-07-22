@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { Collection, BiodataTemplate } from "@/types";
 import { useBiodataStore } from "@/lib/store/biodataStore";
-import { defaultFormData } from "@/lib/store/biodataStore";
+import { sampleFormData } from "@/lib/store/biodataStore";
 import TemplateRenderer from "@/components/templates/TemplateRenderer";
 
 export default function TemplateGridClient({ collection }: { collection: Collection }) {
@@ -27,7 +27,7 @@ export default function TemplateGridClient({ collection }: { collection: Collect
           {/* Scaled template preview with sample data */}
           <div className="relative h-[320px] overflow-hidden">
             <div style={{ transform: "scale(0.38)", transformOrigin: "top left", width: "794px" }}>
-              <TemplateRenderer template={template} data={defaultFormData} />
+              <TemplateRenderer template={template} data={sampleFormData} />
             </div>
             {/* Premium badge */}
             {template.isPremium && (

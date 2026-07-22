@@ -13,9 +13,9 @@ const schema = z.object({
   motherName: z.string().optional(),
   motherOccupation: z.string().optional(),
   siblings: z.string().optional(),
-  familyType: z.enum(["Nuclear", "Joint"]).optional(),
-  familyStatus: z.enum(["Middle Class", "Upper Middle Class", "Affluent"]).optional(),
-  familyValues: z.enum(["Traditional", "Moderate", "Liberal"]).optional(),
+  familyType: z.union([z.enum(["Nuclear", "Joint"]), z.literal("")]).optional(),
+  familyStatus: z.union([z.enum(["Middle Class", "Upper Middle Class", "Affluent"]), z.literal("")]).optional(),
+  familyValues: z.union([z.enum(["Traditional", "Moderate", "Liberal"]), z.literal("")]).optional(),
   nativePlace: z.string().optional(),
   ancestralOrigin: z.string().optional(),
 });

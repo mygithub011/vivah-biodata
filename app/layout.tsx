@@ -44,25 +44,23 @@ export default function RootLayout({
                 />
                 <div className="-space-y-0.5">
                   <span
-                    className="leading-none block text-transparent bg-clip-text"
+                    className="leading-none block text-red-700"
                     style={{
                       fontFamily: "'Cormorant Garamond', 'Playfair Display', serif",
                       fontSize: "1.6rem",
                       fontWeight: 700,
                       fontStyle: "italic",
-                      backgroundImage: "linear-gradient(135deg, #7B1C1C 0%, #C9A84C 60%, #8B0000 100%)",
                       letterSpacing: "0.04em",
                     }}
                   >
                     ShaadiBio
                   </span>
                   <span
-                    className="block"
+                    className="block text-red-800/70"
                     style={{
                       fontFamily: "'Cinzel', serif",
                       fontSize: "0.55rem",
                       fontWeight: 600,
-                      color: "#B8860B",
                       letterSpacing: "0.25em",
                       textTransform: "uppercase",
                     }}

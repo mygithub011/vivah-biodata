@@ -35,7 +35,8 @@ interface BiodataStore extends BiodataState {
   resetForm: () => void;
 }
 
-export const defaultFormData: Partial<BiodataFormData> = {
+// Sample data used ONLY for template previews (carousel, collection pages)
+export const sampleFormData: Partial<BiodataFormData> = {
   personal: {
     fullName: "Priya Sharma",
     dateOfBirth: "1997-03-15",
@@ -99,6 +100,72 @@ export const defaultFormData: Partial<BiodataFormData> = {
     "A driven professional with a passion for technology and a deep respect for family values. I enjoy reading, traveling, and learning classical music in my free time.",
   hobbies: "Reading, Classical Dance, Travel, Photography",
   photoUrl: "/sample-photo.png",
+};
+
+// Empty form data — this is what users start with (blank fields)
+export const defaultFormData: Partial<BiodataFormData> = {
+  personal: {
+    fullName: "",
+    dateOfBirth: "",
+    timeOfBirth: "",
+    placeOfBirth: "",
+    height: "",
+    weight: "",
+    complexion: "",
+    bloodGroup: "",
+    maritalStatus: "",
+    religion: "",
+    caste: "",
+    gotra: "",
+    nakshatra: "",
+    rashi: "",
+    manglik: "",
+    language: "",
+    nationality: "",
+  },
+  education: {
+    highestQualification: "",
+    fieldOfStudy: "",
+    institution: "",
+    yearOfPassing: "",
+  },
+  career: {
+    employmentType: "",
+    currentDesignation: "",
+    company: "",
+    industry: "",
+    annualIncome: "",
+    workLocation: "",
+  },
+  family: {
+    fatherName: "",
+    fatherOccupation: "",
+    motherName: "",
+    motherOccupation: "",
+    siblings: "",
+    familyType: "",
+    familyStatus: "",
+    familyValues: "",
+    nativePlace: "",
+  },
+  contact: {
+    contactName: "",
+    phone: "",
+    email: "",
+    city: "",
+    state: "",
+  },
+  expectations: {
+    preferredAgeFrom: undefined as unknown as number,
+    preferredAgeTo: undefined as unknown as number,
+    preferredHeight: "",
+    preferredEducation: "",
+    preferredProfession: "",
+    otherExpectations: "",
+  },
+  aboutMe: "",
+  hobbies: "",
+  photoUrl: "",
 };
 
 const initialState: BiodataState = {

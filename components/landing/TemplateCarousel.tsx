@@ -44,25 +44,23 @@ export default function TemplateCarousel() {
 
   return (
     <div className="relative">
-      {/* Navigation arrows */}
-      <div className="absolute -top-14 right-0 flex gap-2 sm:right-2">
-        <button
-          type="button"
-          onClick={() => scroll("left")}
-          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 shadow-sm transition hover:bg-slate-50 hover:text-slate-800"
-          aria-label="Scroll left"
-        >
-          ←
-        </button>
-        <button
-          type="button"
-          onClick={() => scroll("right")}
-          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 shadow-sm transition hover:bg-slate-50 hover:text-slate-800"
-          aria-label="Scroll right"
-        >
-          →
-        </button>
-      </div>
+      {/* Navigation arrows - overlaid on carousel edges */}
+      <button
+        type="button"
+        onClick={() => scroll("left")}
+        className="absolute left-0 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-md transition hover:bg-slate-50 hover:text-slate-900 hover:shadow-lg sm:-translate-x-1/3"
+        aria-label="Scroll left"
+      >
+        ←
+      </button>
+      <button
+        type="button"
+        onClick={() => scroll("right")}
+        className="absolute right-0 top-1/2 z-10 translate-x-1/2 -translate-y-1/2 inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-md transition hover:bg-slate-50 hover:text-slate-900 hover:shadow-lg sm:translate-x-1/3"
+        aria-label="Scroll right"
+      >
+        →
+      </button>
 
       <div
         ref={scrollRef}
