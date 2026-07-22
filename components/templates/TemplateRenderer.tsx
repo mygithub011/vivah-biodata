@@ -74,65 +74,7 @@ interface DeityImageProps {
 }
 
 function DeityImage({ templateId, gold, onDarkBg = false }: DeityImageProps) {
-  // Deity images removed — return nothing
   return null;
-
-  // For blend images (stencil / B&W) on colored backgrounds — use mix-blend-mode
-  if (config.blend && onDarkBg) {
-    return (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img
-        src={config.src}
-        alt="Radha Krishna"
-        style={{
-          height: `${config.h}px`,
-          width: "auto",
-          maxWidth: "260px",
-          objectFit: "contain",
-          mixBlendMode: "multiply",
-          display: "block",
-        }}
-      />
-    );
-  }
-
-  // For all other images on dark headers — show in a circular gold-bordered medallion
-  if (onDarkBg) {
-    const w = Math.round(config.h * 0.82);
-    return (
-      <div style={{
-        width: `${w}px`,
-        height: `${config.h}px`,
-        borderRadius: "50%",
-        overflow: "hidden",
-        border: `3px solid ${gold}`,
-        background: "white",
-        boxShadow: `0 6px 28px rgba(0,0,0,0.45), 0 0 0 6px ${gold}35`,
-        display: "inline-block",
-        flexShrink: 0,
-      }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={config.src} alt="Radha Krishna" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-      </div>
-    );
-  }
-
-  // On light backgrounds — direct image with drop-shadow
-  return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
-      src={config.src}
-      alt="Radha Krishna"
-      style={{
-        height: `${config.h}px`,
-        width: "auto",
-        maxWidth: "280px",
-        objectFit: "contain",
-        display: "block",
-        filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.18))",
-      }}
-    />
-  );
 }
 
 function row(label: string, value?: string | null) {
