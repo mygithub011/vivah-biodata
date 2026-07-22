@@ -35,7 +35,7 @@ interface BiodataStore extends BiodataState {
   resetForm: () => void;
 }
 
-const defaultFormData: Partial<BiodataFormData> = {
+export const defaultFormData: Partial<BiodataFormData> = {
   personal: {
     fullName: "Priya Sharma",
     dateOfBirth: "1997-03-15",
