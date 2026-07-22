@@ -7,6 +7,7 @@ import { TEMPLATES } from "@/lib/templates/collections";
 import TemplateRenderer from "@/components/templates/TemplateRenderer";
 import { Button } from "@/components/ui/Button";
 import { PRICING_PLANS } from "@/lib/templates/collections";
+import { generatePdfFromElement, downloadBlob } from "@/lib/generatePdfClient";
 
 interface PreviewStepProps {
   template: BiodataTemplate;
@@ -48,40 +49,37 @@ export default function PreviewStep({ template }: PreviewStepProps) {
   const handleDownloadFree = useCallback(async () => {
     setDownloadLoading(true);
     try {
-      const res = await fetch("/api/generate-pdf", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ formData, templateId: activeTemplateId, tier: "free" }),
-      });
-      if (res.ok) {
-        const contentType = res.headers.get("Content-Type") || "";
-        if (contentType.includes("application/pdf")) {
-          const blob = await res.blob();
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = `biodata-${formData.personal?.fullName ?? "preview"}.pdf`;
-          a.click();
-          URL.revokeObjectURL(url);
-        } else {
-          // Fallback: server returned HTML (Puppeteer failed) — open in new tab for printing
-          const html = await res.text();
-          const w = window.open();
-          if (w) {
-            w.document.write(html);
-            w.document.close();
-          }
-        }
-      } else {
-        const err = await res.json().catch(() => null);
-        alert(err?.error || "PDF generation failed. Please try again.");
+      const el = document.getElementById("biodata-preview");
+      if (!el) {
+        alert("Preview not ready. Please wait and try again.");
+        setDownloadLoading(false);
+        return;
       }
+
+      // Add temporary watermark overlay for free preview
+      const watermark = document.createElement("div");
+      watermark.style.cssText = "position:absolute;inset:0;z-index:9999;pointer-events:none;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(6,1fr);place-items:center;";
+      for (let i = 0; i < 12; i++) {
+        const mark = document.createElement("div");
+        mark.style.cssText = "transform:rotate(-35deg);font-size:42px;color:rgba(0,0,0,0.08);font-weight:900;white-space:nowrap;letter-spacing:4px;font-family:sans-serif;";
+        mark.textContent = "SHAADIBIO";
+        watermark.appendChild(mark);
+      }
+      el.style.position = "relative";
+      el.appendChild(watermark);
+
+      const blob = await generatePdfFromElement(el, `biodata-${formData.personal?.fullName ?? "preview"}.pdf`);
+
+      // Remove watermark after capture
+      el.removeChild(watermark);
+
+      downloadBlob(blob, `biodata-${formData.personal?.fullName ?? "preview"}-watermark.pdf`);
     } catch (err) {
       console.error("Free download error:", err);
-      alert("Download failed. Please check your connection and try again.");
+      alert("PDF generation failed. Please try again.");
     }
     setDownloadLoading(false);
-  }, [formData, activeTemplateId]);
+  }, [formData]);
 
   const handlePayAndDownload = useCallback(async () => {
     setPayLoading(true);

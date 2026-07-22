@@ -2,55 +2,46 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { BiodataFormData } from "@/types";
+import { getTemplateById } from "@/lib/templates/collections";
+import TemplateRenderer from "@/components/templates/TemplateRenderer";
+import { generatePdfFromElement, downloadBlob } from "@/lib/generatePdfClient";
 
 interface DownloadClientProps {
   token: string;
   tier: string;
+  formData: Partial<BiodataFormData> | null;
+  templateId: string | null;
 }
 
-export default function DownloadClient({ token, tier }: DownloadClientProps) {
+export default function DownloadClient({ token, tier, formData, templateId }: DownloadClientProps) {
   const [loading, setLoading] = useState(false);
 
+  const template = templateId ? getTemplateById(templateId) : null;
+
   const handleDownload = async () => {
-    if (!token) {
-      alert("Download token is missing. Please return to the checkout page and retry.");
+    if (!formData || !template) {
+      alert("Biodata data not found. Please contact support at support@shaadibio.com with your payment ID.");
       return;
     }
 
     setLoading(true);
     try {
-      const res = await fetch("/api/generate-pdf", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ downloadToken: token, tier }),
-      });
-
-      if (res.ok) {
-        const contentType = res.headers.get("Content-Type") || "";
-        if (contentType.includes("application/pdf")) {
-          const blob = await res.blob();
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = `vivah-biodata-${token.slice(0, 8)}.pdf`;
-          a.click();
-          URL.revokeObjectURL(url);
-        } else {
-          // HTML fallback — open in new tab
-          const html = await res.text();
-          const w = window.open();
-          if (w) {
-            w.document.write(html);
-            w.document.close();
-          }
-        }
-      } else {
-        const err = await res.json().catch(() => null);
-        alert(err?.error || "Download failed. Please try again or contact support.");
+      const el = document.getElementById("biodata-download-render");
+      if (!el) {
+        alert("Rendering failed. Please refresh and try again.");
+        setLoading(false);
+        return;
       }
+
+      const blob = await generatePdfFromElement(
+        el,
+        `vivah-biodata-${token.slice(0, 8)}.pdf`
+      );
+      downloadBlob(blob, `vivah-biodata-${token.slice(0, 8)}.pdf`);
     } catch (err) {
       console.error("Download error:", err);
-      alert("Download failed. Please check your connection and try again.");
+      alert("PDF generation failed. Please try again or contact support.");
     }
     setLoading(false);
   };
@@ -61,6 +52,18 @@ export default function DownloadClient({ token, tier }: DownloadClientProps) {
         ⬇️ Download HD PDF
       </Button>
       <p className="text-xs text-gray-400">HD quality · No watermark · Print-ready A4</p>
+
+      {/* Hidden render area for PDF capture */}
+      {formData && template && (
+        <div
+          style={{ position: "absolute", left: "-9999px", top: 0 }}
+          aria-hidden="true"
+        >
+          <div id="biodata-download-render">
+            <TemplateRenderer template={template} data={formData} scale={1} />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

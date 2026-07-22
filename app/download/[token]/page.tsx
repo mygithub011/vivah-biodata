@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/db";
 import DownloadClient from "./DownloadClient";
+import { BiodataFormData } from "@/types";
 
 interface Params {
   params: Promise<{ token: string }>;
@@ -42,6 +43,8 @@ export default async function DownloadPage({ params }: Params) {
       <DownloadClient
         token={token}
         tier={(biodata?.tier as string) ?? "premium"}
+        formData={biodata?.formData as Partial<BiodataFormData> | null}
+        templateId={biodata?.templateId ?? null}
       />
 
       <div className="mt-10 p-6 bg-amber-50 rounded-2xl border border-amber-100">
