@@ -226,7 +226,7 @@ export const useBiodataStore = create<BiodataStore>()(
         set((s) => ({ formData: { ...s.formData, photoUrl: url } })),
 
       setCollection: (id) => set({ selectedCollectionId: id }),
-      setTemplate: (id) => set({ selectedTemplateId: id }),
+      setTemplate: (id) => set({ selectedTemplateId: id, currentStep: 1 }),
       setStep: (step) => set({ currentStep: step }),
       nextStep: () => set((s) => ({ currentStep: Math.min(s.currentStep + 1, 5) })),
       prevStep: () => set((s) => ({ currentStep: Math.max(s.currentStep - 1, 1) })),

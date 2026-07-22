@@ -1356,14 +1356,14 @@ export const PRICING_PLANS = [
   {
     id: "premium",
     name: "Premium",
-    price: 49,
+    price: 1,
     features: ["All 50 templates", "HD PDF — no watermark", "All collections", "Instant download"],
     recommended: true,
   },
   {
     id: "premium_plus",
     name: "Premium Plus",
-    price: 99,
+    price: 2,
     features: [
       "Everything in Premium",
       "AI-written About Me",

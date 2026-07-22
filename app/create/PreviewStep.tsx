@@ -114,7 +114,7 @@ export default function PreviewStep({ template }: PreviewStepProps) {
         amount,
         currency,
         name: "ShaadiBio",
-        description: effectiveTier === "premium" ? "Premium HD Biodata — ₹49" : "Premium Plus Biodata — ₹99",
+        description: effectiveTier === "premium" ? "Premium HD Biodata — ₹1" : "Premium Plus Biodata — ₹2",
         order_id: orderId,
         handler: async (response: { razorpay_payment_id: string; razorpay_order_id: string; razorpay_signature: string }) => {
           try {
@@ -126,11 +126,21 @@ export default function PreviewStep({ template }: PreviewStepProps) {
             });
 
             if (verifyRes.ok) {
-              const { downloadToken } = await verifyRes.json();
               setPaymentStatus("paid");
-              setDownloadToken(downloadToken);
-              // Use window.location for reliable redirect after Razorpay modal closes
-              window.location.href = `/download/${downloadToken}`;
+
+              // Trigger PDF download directly after payment
+              const el = document.getElementById("biodata-preview");
+              if (el) {
+                try {
+                  const { generatePdfFromElement, downloadBlob } = await import("@/lib/generatePdfClient");
+                  const blob = await generatePdfFromElement(el, `shaadibio-${formData.personal?.fullName ?? "biodata"}.pdf`);
+                  downloadBlob(blob, `shaadibio-${formData.personal?.fullName ?? "biodata"}.pdf`);
+                } catch (pdfErr) {
+                  console.error("PDF generation after payment:", pdfErr);
+                  // Fallback: open print dialog
+                  window.print();
+                }
+              }
             } else {
               const errData = await verifyRes.json().catch(() => null);
               alert(errData?.error || "Payment verification failed. Please contact support at support@shaadibio.com");
@@ -141,7 +151,7 @@ export default function PreviewStep({ template }: PreviewStepProps) {
           }
         },
         prefill: {},
-        theme: { color: "#7B1C1C" },
+        theme: { color: "#B91C1C" },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any);
 
@@ -165,7 +175,7 @@ export default function PreviewStep({ template }: PreviewStepProps) {
       };
       document.body.appendChild(script);
     }
-  }, [formData, activeTemplateId, selectedCollectionId, effectiveTier, setPaymentStatus, setDownloadToken]);
+  }, [formData, activeTemplateId, selectedCollectionId, effectiveTier, setPaymentStatus]);
 
   return (
     <div>
