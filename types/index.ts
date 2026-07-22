@@ -94,7 +94,9 @@ export type CollectionId =
   | "traditional"
   | "modern"
   | "luxury"
-  | "heritage";
+  | "heritage"
+  | "elegant"
+  | "regional";
 
 export interface TemplateColors {
   primary: string;

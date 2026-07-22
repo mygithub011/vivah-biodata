@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export const metadata = {
   title: "Browse Collections — ShaadiBio",
-  description: "Choose from 6 premium collections: Royal, Floral, Traditional Hindu, Modern Minimal, Luxury Gold, and Heritage. 20 beautiful templates.",
+  description: "Choose from 8 premium collections: Royal, Floral, Traditional Hindu, Modern Minimal, Luxury Gold, Heritage, Elegant, and Regional Pride. 50 beautiful templates.",
 };
 
 export default function CollectionsPage() {
@@ -16,7 +16,7 @@ export default function CollectionsPage() {
           Choose Your Design Style
         </h1>
         <p className="text-gray-500 text-lg max-w-2xl mx-auto">
-          Each collection is designed with a unique aesthetic. Browse all 6 collections, each with multiple unique templates.
+          Each collection is designed with a unique aesthetic. Browse all 8 collections and explore 50 unique templates across every style.
         </p>
       </div>
 

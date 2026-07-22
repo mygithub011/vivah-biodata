@@ -1,9 +1,11 @@
+import Link from "next/link";
+
 export default function FeatureSection() {
   const features = [
     {
       icon: "🎨",
-      title: "20 Premium Templates",
-      description: "Across 6 curated collections — Royal, Floral, Traditional, Modern, Luxury, Heritage.",
+      title: "50 Premium Templates",
+      description: "Across 8 curated collections — Royal, Floral, Traditional, Modern, Luxury, Heritage, Elegant, and Regional.",
     },
     {
       icon: "⚡",
@@ -120,7 +122,7 @@ export default function FeatureSection() {
                 name: "Premium",
                 price: "₹49",
                 badge: "Most Popular",
-                features: ["All 20 templates", "HD PDF — no watermark", "All 6 collections", "Instant download"],
+                features: ["All 50 templates", "HD PDF — no watermark", "All 8 collections", "Instant download"],
                 cta: "Create Premium Biodata",
                 highlighted: true,
               },
@@ -151,7 +153,7 @@ export default function FeatureSection() {
                     </li>
                   ))}
                 </ul>
-                <a
+                <Link
                   href="/collections"
                   className={`block w-full text-center py-3 rounded-xl font-semibold text-sm transition-all ${
                     plan.highlighted
@@ -160,7 +162,7 @@ export default function FeatureSection() {
                   }`}
                 >
                   {plan.cta}
-                </a>
+                </Link>
               </div>
             ))}
           </div>
@@ -196,7 +198,7 @@ export default function FeatureSection() {
                 <div className="flex gap-0.5 mb-3 text-amber-400">
                   {"★".repeat(review.rating)}
                 </div>
-                <p className="text-gray-700 text-sm leading-relaxed mb-4">"{review.text}"</p>
+                <p className="text-gray-700 text-sm leading-relaxed mb-4">&ldquo;{review.text}&rdquo;</p>
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-full bg-red-700 text-white flex items-center justify-center font-bold text-sm">
                     {review.name[0]}
