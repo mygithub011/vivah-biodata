@@ -201,7 +201,7 @@ function buildBiodataHTML(
     <div style="position:relative;z-index:1;">
       <!-- Header -->
       <div style="text-align:center;margin-bottom:20px;">
-        <p style="font-size:10px;letter-spacing:4px;color:${colors.secondary};text-transform:uppercase;">|| श्री गणेशाय नमः ||</p>
+        <p style="font-size:10px;letter-spacing:4px;color:${colors.secondary};text-transform:uppercase;">MARRIAGE BIODATA</p>
         <h1 style="font-family:'${fonts.heading}',serif;font-size:32px;font-weight:700;color:${colors.primary};margin:4px 0;">${personal?.fullName ?? "Your Name"}</h1>
         <p style="font-size:12px;color:${colors.secondary};font-weight:600;letter-spacing:2px;">── MARRIAGE BIODATA ──</p>
       </div>

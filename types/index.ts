@@ -94,7 +94,10 @@ export type CollectionId =
   | "traditional"
   | "modern"
   | "luxury"
-  | "heritage";
+  | "premium"
+  | "heritage"
+  | "elegant"
+  | "regional";
 
 export interface TemplateColors {
   primary: string;
@@ -126,6 +129,7 @@ export interface BiodataTemplate {
   id: string;
   name: string;
   collectionId: CollectionId;
+  isPremium?: boolean;
   tagline: string;
   colors: TemplateColors;
   fonts: TemplateFonts;

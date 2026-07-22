@@ -74,8 +74,8 @@ interface DeityImageProps {
 }
 
 function DeityImage({ templateId, gold, onDarkBg = false }: DeityImageProps) {
-  const config = DEITY_IMAGES[templateId];
-  if (!config) return null;
+  // Deity images removed — return nothing
+  return null;
 
   // For blend images (stencil / B&W) on colored backgrounds — use mix-blend-mode
   if (config.blend && onDarkBg) {
@@ -220,7 +220,7 @@ function FloralBiodata({ template, data }: BP) {
           <span style={{ fontSize: "10px", fontWeight: 700, color: colors.secondary, letterSpacing: "5px", textTransform: "uppercase" }}>Marriage Biodata</span>
           <span style={{ color: colors.primary }}>✿</span>
         </div>
-        <div style={{ fontSize: "10px", color: colors.secondary, letterSpacing: "3px", opacity: 0.8 }}>|| श्री लक्ष्म्यै नमः ||</div>
+        <div style={{ fontSize: "10px", color: colors.secondary, letterSpacing: "3px", opacity: 0.8 }}>✦ MARRIAGE BIODATA ✦</div>
         <div style={{ marginTop: "10px" }}><FloralGarlandSVG color={colors.primary} /></div>
       </div>
 
@@ -429,7 +429,7 @@ function RoyalBiodata({ template, data }: BP) {
         <div style={{ display: "flex", justifyContent: "center", marginBottom: "6px" }}>
           <DeityImage templateId={template.id} gold={colors.secondary} onDarkBg />
         </div>
-        <div style={{ fontSize: "11px", color: colors.secondary, letterSpacing: "4px", marginBottom: "8px", opacity: 0.9 }}>✦ श्री राधाकृष्णाय नमः ✦</div>
+        <div style={{ fontSize: "11px", color: colors.secondary, letterSpacing: "4px", marginBottom: "8px", opacity: 0.9 }}>✦ MARRIAGE BIODATA ✦</div>
         <div style={{ fontFamily: `'${fonts.heading}',serif`, fontSize: "50px", fontWeight: 700, color: colors.secondary, lineHeight: 1.05, letterSpacing: "2px", textShadow: "0 2px 8px rgba(0,0,0,0.4)" }}>{name}</div>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "16px", marginTop: "10px" }}>
           <div style={{ flex: 1, height: "1px", background: `linear-gradient(to right,transparent,${colors.secondary}80)` }} />
@@ -1499,7 +1499,7 @@ function TraditionalBiodata({ template, data }: BP) {
         <div style={{ display: "flex", justifyContent: "center", marginBottom: "4px" }}>
           <DeityImage templateId={template.id} gold={colors.secondary} onDarkBg />
         </div>
-        <div style={{ fontSize: "10px", color: colors.secondary, letterSpacing: "3px", opacity: 0.9, marginBottom: "4px" }}>|| श्री गणेशाय नमः ||  ॥ शुभ विवाह बायोडाटा ॥</div>
+        <div style={{ fontSize: "10px", color: colors.secondary, letterSpacing: "3px", opacity: 0.9, marginBottom: "4px" }}>✦ MARRIAGE BIODATA ✦</div>
         <div style={{ fontFamily: `'${fonts.heading}',serif`, fontSize: "46px", fontWeight: 700, color: colors.secondary, lineHeight: 1.1, textShadow: "0 2px 8px rgba(0,0,0,0.4)" }}>{name}</div>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "12px", marginTop: "8px" }}>
           <div style={{ flex: 1, height: "1px", background: `linear-gradient(to right,transparent,${colors.secondary}70)` }} />
@@ -1842,7 +1842,7 @@ function HeritageBiodata({ template, data }: BP) {
             {data.photoUrl?<img src={data.photoUrl} alt="" style={{width:"100%",height:"100%",objectFit:"cover",filter:"sepia(20%)"}}/>:<div style={{display:"flex",alignItems:"center",justifyContent:"center",height:"100%",fontSize:"50px",opacity:0.25}}>👤</div>}
           </div>
         </div>
-        <div style={{ fontSize: "11px", color: colors.secondary, letterSpacing: "3px", marginBottom: "8px", opacity: 0.8 }}>— ॐ नमः शिवाय — AUSPICIOUS MARRIAGE BIODATA —</div>
+        <div style={{ fontSize: "11px", color: colors.secondary, letterSpacing: "3px", marginBottom: "8px", opacity: 0.8 }}>— AUSPICIOUS MARRIAGE BIODATA —</div>
         <div style={{ fontFamily: `'${fonts.heading}',serif`, fontSize: "46px", fontWeight: 400, color: colors.primary, lineHeight: 1.1, letterSpacing: "1px", fontStyle: "italic" }}>{name}</div>
         <VintageRuleSVG color={colors.secondary} />
       </div>

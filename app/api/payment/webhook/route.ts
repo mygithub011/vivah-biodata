@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { prisma } from "@/lib/db";
+import { v4 as uuidv4 } from "uuid";
 
 export async function POST(request: NextRequest) {
   const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET ?? process.env.RAZORPAY_KEY_SECRET;
@@ -53,9 +54,17 @@ export async function POST(request: NextRequest) {
         },
       });
 
+      // Generate a download token if one doesn't already exist
+      const existingBiodata = await prisma.biodata.findUnique({
+        where: { id: paymentOrder.biodataId },
+        select: { downloadToken: true },
+      });
+
+      const downloadToken = existingBiodata?.downloadToken ?? uuidv4();
+
       await prisma.biodata.updateMany({
         where: { id: paymentOrder.biodataId, paymentStatus: { not: "paid" } },
-        data: { paymentStatus: "paid" },
+        data: { paymentStatus: "paid", downloadToken, paidAt: new Date() },
       });
 
       return NextResponse.json({ success: true });
