@@ -114,7 +114,7 @@ export default function PreviewStep({ template }: PreviewStepProps) {
         amount,
         currency,
         name: "ShaadiBio",
-        description: effectiveTier === "premium" ? "Premium HD Biodata — ₹1" : "Premium Plus Biodata — ₹2",
+        description: effectiveTier === "premium" ? "Premium HD Biodata — ₹49" : "Premium Plus Biodata — ₹99",
         order_id: orderId,
         handler: async (response: { razorpay_payment_id: string; razorpay_order_id: string; razorpay_signature: string }) => {
           try {

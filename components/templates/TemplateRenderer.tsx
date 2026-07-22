@@ -11,9 +11,12 @@ interface Props {
 }
 
 export default function TemplateRenderer({ template, data, scale = 1 }: Props) {
-  const style: React.CSSProperties = {
-    width: "794px",
-    minHeight: "1123px",
+  const A4_WIDTH = 794; // px at 96dpi
+  const A4_HEIGHT = 1123; // px at 96dpi
+
+  const containerStyle: React.CSSProperties = {
+    width: `${A4_WIDTH}px`,
+    height: `${A4_HEIGHT}px`,
     transform: scale !== 1 ? `scale(${scale})` : undefined,
     transformOrigin: scale !== 1 ? "top left" : undefined,
     position: "relative",
@@ -33,8 +36,52 @@ export default function TemplateRenderer({ template, data, scale = 1 }: Props) {
   })();
 
   return (
-    <div style={style} id="biodata-preview" data-template={template.id}>
-      {inner}
+    <div style={containerStyle} id="biodata-preview" data-template={template.id}>
+      <AutoFitContent maxHeight={A4_HEIGHT}>
+        {inner}
+      </AutoFitContent>
+    </div>
+  );
+}
+
+/** Scales down child content if it exceeds maxHeight */
+function AutoFitContent({ children, maxHeight }: { children: React.ReactNode; maxHeight: number }) {
+  const contentRef = React.useRef<HTMLDivElement>(null);
+  const [fitScale, setFitScale] = React.useState(1);
+
+  React.useEffect(() => {
+    const el = contentRef.current;
+    if (!el) return;
+
+    const observer = new ResizeObserver(() => {
+      const contentHeight = el.scrollHeight;
+      if (contentHeight > maxHeight) {
+        setFitScale(maxHeight / contentHeight);
+      } else {
+        setFitScale(1);
+      }
+    });
+
+    observer.observe(el);
+    // Initial check
+    const contentHeight = el.scrollHeight;
+    if (contentHeight > maxHeight) {
+      setFitScale(maxHeight / contentHeight);
+    }
+
+    return () => observer.disconnect();
+  }, [maxHeight]);
+
+  return (
+    <div
+      ref={contentRef}
+      style={{
+        transformOrigin: "top left",
+        transform: fitScale < 1 ? `scale(${fitScale})` : undefined,
+        width: fitScale < 1 ? `${100 / fitScale}%` : "100%",
+      }}
+    >
+      {children}
     </div>
   );
 }
