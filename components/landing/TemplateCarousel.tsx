@@ -101,12 +101,6 @@ export default function TemplateCarousel() {
 
                 {/* Header area */}
                 <div className="mb-3 text-center">
-                  <p
-                    className="text-[0.6rem] font-semibold uppercase tracking-[0.2em]"
-                    style={{ color: template.colors.secondary }}
-                  >
-                    ॥ श्री गणेशाय नमः ॥
-                  </p>
                   <h3
                     className="mt-1 text-lg font-bold leading-tight"
                     style={{ color: template.colors.primary, fontFamily: `'${template.fonts.heading}', serif` }}
@@ -118,18 +112,17 @@ export default function TemplateCarousel() {
                   </p>
                 </div>
 
-                {/* Photo placeholder + details */}
+                {/* Photo + details */}
                 <div className="flex gap-3">
                   <div
-                    className="flex h-14 w-14 flex-shrink-0 items-center justify-center text-xl"
+                    className="flex h-14 w-14 flex-shrink-0 items-center justify-center overflow-hidden"
                     style={{
                       borderRadius: template.photoShape === "circle" ? "50%" : template.photoShape === "oval" ? "50% / 40%" : "12px",
                       border: `2px solid ${template.colors.secondary}`,
                       backgroundColor: template.colors.lightBg,
-                      color: template.colors.secondary,
                     }}
                   >
-                    👤
+                    <img src="/sample-photo.png" alt="Sample" className="h-full w-full object-cover" />
                   </div>
                   <div className="flex-1 space-y-1 text-[0.68rem]" style={{ color: template.colors.text }}>
                     <div className="flex justify-between">
