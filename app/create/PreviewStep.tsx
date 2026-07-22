@@ -4,7 +4,7 @@ import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { BiodataTemplate } from "@/types";
 import { useBiodataStore } from "@/lib/store/biodataStore";
-import { getCollectionById, TEMPLATES } from "@/lib/templates/collections";
+import { TEMPLATES } from "@/lib/templates/collections";
 import TemplateRenderer from "@/components/templates/TemplateRenderer";
 import { Button } from "@/components/ui/Button";
 import { PRICING_PLANS } from "@/lib/templates/collections";
@@ -34,7 +34,6 @@ interface RazorpayOptions {
 export default function PreviewStep({ template }: PreviewStepProps) {
   const router = useRouter();
   const { formData, selectedCollectionId, setTemplate, prevStep, setPaymentStatus, setDownloadToken } = useBiodataStore();
-  const collection = getCollectionById(selectedCollectionId ?? "");
   const [selectedTier, setSelectedTier] = useState<"free" | "premium" | "premium_plus">("premium");
   const [payLoading, setPayLoading] = useState(false);
   const [downloadLoading, setDownloadLoading] = useState(false);
@@ -42,6 +41,11 @@ export default function PreviewStep({ template }: PreviewStepProps) {
 
   const allTemplatesInCollection = TEMPLATES.filter((t) => t.collectionId === selectedCollectionId);
   const activeTemplate = allTemplatesInCollection.find((t) => t.id === activeTemplateId) ?? template;
+  const isPremiumTemplate = activeTemplate.isPremium === true;
+  const effectiveTier = isPremiumTemplate ? "premium" : selectedTier;
+  const availablePlans = PRICING_PLANS.filter((plan) =>
+    isPremiumTemplate ? plan.id === "premium" : plan.id !== "free"
+  );
 
   const handleDownloadFree = useCallback(async () => {
     setDownloadLoading(true);
@@ -73,7 +77,7 @@ export default function PreviewStep({ template }: PreviewStepProps) {
         formData,
         templateId: activeTemplateId,
         collectionId: selectedCollectionId,
-        tier: selectedTier,
+        tier: effectiveTier,
       }),
     });
 
@@ -95,14 +99,14 @@ export default function PreviewStep({ template }: PreviewStepProps) {
         amount,
         currency,
         name: "ShaadiBio",
-        description: selectedTier === "premium" ? "Premium HD Biodata — ₹49" : "Premium Plus Biodata — ₹99",
+        description: effectiveTier === "premium" ? "Premium HD Biodata — ₹49" : "Premium Plus Biodata — ₹99",
         order_id: orderId,
         handler: async (response: { razorpay_payment_id: string; razorpay_order_id: string; razorpay_signature: string }) => {
           // Verify payment signature on server
           const verifyRes = await fetch("/api/payment/verify", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ ...response, biodataId, tier: selectedTier }),
+            body: JSON.stringify({ ...response, biodataId, tier: effectiveTier }),
           });
 
           if (verifyRes.ok) {
@@ -142,7 +146,7 @@ export default function PreviewStep({ template }: PreviewStepProps) {
       };
       document.body.appendChild(script);
     }
-  }, [formData, activeTemplateId, selectedCollectionId, selectedTier, router, setPaymentStatus, setDownloadToken]);
+  }, [formData, activeTemplateId, selectedCollectionId, effectiveTier, router, setPaymentStatus, setDownloadToken]);
 
   return (
     <div>
@@ -215,12 +219,12 @@ export default function PreviewStep({ template }: PreviewStepProps) {
               <h3 className="font-bold text-gray-900 mb-4 text-base">Choose Your Plan</h3>
 
               <div className="space-y-3">
-                {PRICING_PLANS.filter((p) => p.id !== "free").map((plan) => (
+                {availablePlans.map((plan) => (
                   <button
                     key={plan.id}
                     onClick={() => setSelectedTier(plan.id as "premium" | "premium_plus")}
                     className={`w-full text-left p-4 rounded-xl border-2 transition-all ${
-                      selectedTier === plan.id
+                      effectiveTier === plan.id
                         ? "border-red-600 bg-red-50"
                         : "border-gray-200 hover:border-red-300"
                     }`}
@@ -256,19 +260,21 @@ export default function PreviewStep({ template }: PreviewStepProps) {
             </div>
 
             {/* Free Download */}
-            <div className="bg-gray-50 rounded-2xl p-5 border border-gray-200">
-              <p className="text-sm font-semibold text-gray-700 mb-1">Try Free First</p>
-              <p className="text-xs text-gray-400 mb-3">Download a watermarked preview to check the layout.</p>
-              <Button
-                variant="outline"
-                size="md"
-                className="w-full"
-                onClick={handleDownloadFree}
-                loading={downloadLoading}
-              >
-                Download Free Preview
-              </Button>
-            </div>
+            {!isPremiumTemplate && (
+              <div className="bg-gray-50 rounded-2xl p-5 border border-gray-200">
+                <p className="text-sm font-semibold text-gray-700 mb-1">Try Free First</p>
+                <p className="text-xs text-gray-400 mb-3">Download a watermarked preview to check the layout.</p>
+                <Button
+                  variant="outline"
+                  size="md"
+                  className="w-full"
+                  onClick={handleDownloadFree}
+                  loading={downloadLoading}
+                >
+                  Download Free Preview
+                </Button>
+              </div>
+            )}
 
             {/* Share */}
             <div className="bg-green-50 rounded-2xl p-5 border border-green-100">
