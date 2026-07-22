@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
 import { BiodataTemplate } from "@/types";
 import { useBiodataStore } from "@/lib/store/biodataStore";
 import { TEMPLATES } from "@/lib/templates/collections";
@@ -32,7 +31,6 @@ interface RazorpayOptions {
 }
 
 export default function PreviewStep({ template }: PreviewStepProps) {
-  const router = useRouter();
   const { formData, selectedCollectionId, setTemplate, prevStep, setPaymentStatus, setDownloadToken } = useBiodataStore();
   const [selectedTier, setSelectedTier] = useState<"free" | "premium" | "premium_plus">("premium");
   const [payLoading, setPayLoading] = useState(false);
@@ -49,19 +47,38 @@ export default function PreviewStep({ template }: PreviewStepProps) {
 
   const handleDownloadFree = useCallback(async () => {
     setDownloadLoading(true);
-    const res = await fetch("/api/generate-pdf", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ formData, templateId: activeTemplateId, tier: "free" }),
-    });
-    if (res.ok) {
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `biodata-${formData.personal?.fullName ?? "preview"}.pdf`;
-      a.click();
-      URL.revokeObjectURL(url);
+    try {
+      const res = await fetch("/api/generate-pdf", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ formData, templateId: activeTemplateId, tier: "free" }),
+      });
+      if (res.ok) {
+        const contentType = res.headers.get("Content-Type") || "";
+        if (contentType.includes("application/pdf")) {
+          const blob = await res.blob();
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `biodata-${formData.personal?.fullName ?? "preview"}.pdf`;
+          a.click();
+          URL.revokeObjectURL(url);
+        } else {
+          // Fallback: server returned HTML (Puppeteer failed) — open in new tab for printing
+          const html = await res.text();
+          const w = window.open();
+          if (w) {
+            w.document.write(html);
+            w.document.close();
+          }
+        }
+      } else {
+        const err = await res.json().catch(() => null);
+        alert(err?.error || "PDF generation failed. Please try again.");
+      }
+    } catch (err) {
+      console.error("Free download error:", err);
+      alert("Download failed. Please check your connection and try again.");
     }
     setDownloadLoading(false);
   }, [formData, activeTemplateId]);
@@ -102,20 +119,27 @@ export default function PreviewStep({ template }: PreviewStepProps) {
         description: effectiveTier === "premium" ? "Premium HD Biodata — ₹49" : "Premium Plus Biodata — ₹99",
         order_id: orderId,
         handler: async (response: { razorpay_payment_id: string; razorpay_order_id: string; razorpay_signature: string }) => {
-          // Verify payment signature on server
-          const verifyRes = await fetch("/api/payment/verify", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ ...response, biodataId, tier: effectiveTier }),
-          });
+          try {
+            // Verify payment signature on server
+            const verifyRes = await fetch("/api/payment/verify", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ ...response, biodataId, tier: effectiveTier }),
+            });
 
-          if (verifyRes.ok) {
-            const { downloadToken } = await verifyRes.json();
-            setPaymentStatus("paid");
-            setDownloadToken(downloadToken);
-            router.push(`/download/${downloadToken}`);
-          } else {
-            alert("Payment verification failed. Please contact support at support@shaadibio.com");
+            if (verifyRes.ok) {
+              const { downloadToken } = await verifyRes.json();
+              setPaymentStatus("paid");
+              setDownloadToken(downloadToken);
+              // Use window.location for reliable redirect after Razorpay modal closes
+              window.location.href = `/download/${downloadToken}`;
+            } else {
+              const errData = await verifyRes.json().catch(() => null);
+              alert(errData?.error || "Payment verification failed. Please contact support at support@shaadibio.com");
+            }
+          } catch (err) {
+            console.error("Payment handler error:", err);
+            alert("Something went wrong after payment. Please contact support with your payment ID: " + response.razorpay_payment_id);
           }
         },
         prefill: {
@@ -146,7 +170,7 @@ export default function PreviewStep({ template }: PreviewStepProps) {
       };
       document.body.appendChild(script);
     }
-  }, [formData, activeTemplateId, selectedCollectionId, effectiveTier, router, setPaymentStatus, setDownloadToken]);
+  }, [formData, activeTemplateId, selectedCollectionId, effectiveTier, setPaymentStatus, setDownloadToken]);
 
   return (
     <div>

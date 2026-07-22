@@ -75,10 +75,19 @@ export async function POST(request: NextRequest) {
 
   const html = buildBiodataHTML(trustedFormData, template, tier === "free");
 
+  // Resolve base URL for images (relative paths like /sample-photo.png)
+  const baseUrl = request.nextUrl.origin || `http://localhost:${process.env.PORT || 3000}`;
+
+  // Replace relative image URLs with absolute ones so Puppeteer can load them
+  const resolvedHtml = html.replace(
+    /src="\/([^"]+)"/g,
+    `src="${baseUrl}/$1"`
+  );
+
   try {
     const browser = await getBrowser();
     const page = await browser.newPage();
-    await page.setContent(html, { waitUntil: "load" });
+    await page.setContent(resolvedHtml, { waitUntil: "load" });
 
     const pdf = await page.pdf({
       format: "A4",
@@ -119,8 +128,10 @@ function buildBiodataHTML(
   const expectations = data.expectations;
   const age = personal?.dateOfBirth ? calculateAge(personal.dateOfBirth) : null;
 
-  const photoHtml = data.photoUrl
-    ? `<img src="${data.photoUrl}" alt="Profile" style="width:100%;height:100%;object-fit:cover;" />`
+  // Only use photo if it's a data URI (base64) — blob: URLs won't work in Puppeteer
+  const usablePhotoUrl = data.photoUrl && !data.photoUrl.startsWith("blob:") ? data.photoUrl : null;
+  const photoHtml = usablePhotoUrl
+    ? `<img src="${usablePhotoUrl}" alt="Profile" style="width:100%;height:100%;object-fit:cover;" />`
     : `<div style="color:${colors.secondary};font-size:40px;text-align:center;">👤</div>`;
 
   const infoRow = (label: string, value: string | undefined | null) =>

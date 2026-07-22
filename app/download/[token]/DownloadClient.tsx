@@ -18,22 +18,39 @@ export default function DownloadClient({ token, tier }: DownloadClientProps) {
     }
 
     setLoading(true);
-    const res = await fetch("/api/generate-pdf", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ downloadToken: token, tier }),
-    });
+    try {
+      const res = await fetch("/api/generate-pdf", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ downloadToken: token, tier }),
+      });
 
-    if (res.ok) {
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `vivah-biodata-${token.slice(0, 8)}.pdf`;
-      a.click();
-      URL.revokeObjectURL(url);
-    } else {
-      alert("Download failed. Please try again or contact support.");
+      if (res.ok) {
+        const contentType = res.headers.get("Content-Type") || "";
+        if (contentType.includes("application/pdf")) {
+          const blob = await res.blob();
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `vivah-biodata-${token.slice(0, 8)}.pdf`;
+          a.click();
+          URL.revokeObjectURL(url);
+        } else {
+          // HTML fallback — open in new tab
+          const html = await res.text();
+          const w = window.open();
+          if (w) {
+            w.document.write(html);
+            w.document.close();
+          }
+        }
+      } else {
+        const err = await res.json().catch(() => null);
+        alert(err?.error || "Download failed. Please try again or contact support.");
+      }
+    } catch (err) {
+      console.error("Download error:", err);
+      alert("Download failed. Please check your connection and try again.");
     }
     setLoading(false);
   };
