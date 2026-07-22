@@ -142,10 +142,7 @@ export default function PreviewStep({ template }: PreviewStepProps) {
             alert("Something went wrong after payment. Please contact support with your payment ID: " + response.razorpay_payment_id);
           }
         },
-        prefill: {
-          name: formData.contact?.contactName ?? "",
-          contact: formData.contact?.phone ?? "",
-        },
+        prefill: {},
         theme: { color: "#7B1C1C" },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any);
