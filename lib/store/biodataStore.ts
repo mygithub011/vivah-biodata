@@ -103,7 +103,8 @@ export const sampleFormData: Partial<BiodataFormData> = {
 };
 
 // Empty form data — this is what users start with (blank fields)
-export const defaultFormData: Partial<BiodataFormData> = {
+// Uses type assertion for enum fields that will be validated on form submit
+export const defaultFormData = {
   personal: {
     fullName: "",
     dateOfBirth: "",
@@ -113,13 +114,13 @@ export const defaultFormData: Partial<BiodataFormData> = {
     weight: "",
     complexion: "",
     bloodGroup: "",
-    maritalStatus: "",
+    maritalStatus: "Never Married",
     religion: "",
     caste: "",
     gotra: "",
     nakshatra: "",
     rashi: "",
-    manglik: "",
+    manglik: undefined,
     language: "",
     nationality: "",
   },
@@ -130,7 +131,7 @@ export const defaultFormData: Partial<BiodataFormData> = {
     yearOfPassing: "",
   },
   career: {
-    employmentType: "",
+    employmentType: "Employed",
     currentDesignation: "",
     company: "",
     industry: "",
@@ -143,9 +144,9 @@ export const defaultFormData: Partial<BiodataFormData> = {
     motherName: "",
     motherOccupation: "",
     siblings: "",
-    familyType: "",
-    familyStatus: "",
-    familyValues: "",
+    familyType: undefined,
+    familyStatus: undefined,
+    familyValues: undefined,
     nativePlace: "",
   },
   contact: {
@@ -166,7 +167,7 @@ export const defaultFormData: Partial<BiodataFormData> = {
   aboutMe: "",
   hobbies: "",
   photoUrl: "",
-};
+} as Partial<BiodataFormData>;
 
 const initialState: BiodataState = {
   formData: defaultFormData,
