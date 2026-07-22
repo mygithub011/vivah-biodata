@@ -34,7 +34,14 @@ export default function FamilyDetailsForm() {
   });
 
   const onSubmit = (data: FormValues) => {
-    setFamilyDetails(data);
+    // Convert empty strings to undefined for enum fields
+    const cleaned = {
+      ...data,
+      familyType: data.familyType || undefined,
+      familyStatus: data.familyStatus || undefined,
+      familyValues: data.familyValues || undefined,
+    };
+    setFamilyDetails(cleaned);
     nextStep();
   };
 

@@ -42,7 +42,8 @@ export default function PersonalDetailsForm() {
   });
 
   const onSubmit = (data: FormValues) => {
-    setPersonalDetails(data);
+    const cleaned = { ...data, manglik: data.manglik || undefined };
+    setPersonalDetails(cleaned);
     nextStep();
   };
 
