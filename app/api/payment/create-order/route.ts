@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
       orderId: order.id,
       amount: order.amount,
       currency: order.currency,
-      biodataId,
+      biodataId: dbBiodataId ?? biodataId,
       key: keyId,
     });
   } catch (err: unknown) {
