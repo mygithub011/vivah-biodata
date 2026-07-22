@@ -74,8 +74,8 @@ interface DeityImageProps {
 }
 
 function DeityImage({ templateId, gold, onDarkBg = false }: DeityImageProps) {
-  const config = DEITY_IMAGES[templateId];
-  if (!config) return null;
+  // Deity images removed — return nothing
+  return null;
 
   // For blend images (stencil / B&W) on colored backgrounds — use mix-blend-mode
   if (config.blend && onDarkBg) {
