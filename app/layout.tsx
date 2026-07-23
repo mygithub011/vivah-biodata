@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
+import { SITE_NAME, SITE_URL, SITE_DESCRIPTION, DEFAULT_OG_IMAGE, TWITTER_HANDLE, LOCALE } from "@/lib/seo/constants";
+import { organizationSchema, websiteSchema, softwareApplicationSchema } from "@/lib/seo/schemas";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -9,10 +11,43 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "ShaadiBio — Create Premium Marriage Biodata in 2 Minutes",
-  description:
-    "Create a beautiful, professionally designed Hindu marriage biodata in minutes. 20 premium templates across Royal, Floral, Traditional, Modern, Luxury & Heritage collections. Download HD PDF for ₹49.",
-  keywords: "marriage biodata, hindu biodata, biodata maker, ShaadiBio, shaadi biodata, wedding biodata PDF",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: `${SITE_NAME} — Create Premium Marriage Biodata in 2 Minutes`,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  keywords: "marriage biodata, hindu biodata, biodata maker, ShaadiBio, shaadi biodata, wedding biodata PDF, marriage biodata maker, free biodata maker",
+  alternates: {
+    canonical: SITE_URL,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    "max-snippet": -1,
+    "max-image-preview": "large" as const,
+    "max-video-preview": -1,
+  },
+  openGraph: {
+    type: "website",
+    locale: LOCALE,
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    title: `${SITE_NAME} — Create Premium Marriage Biodata in 2 Minutes`,
+    description: SITE_DESCRIPTION,
+    images: [{ url: DEFAULT_OG_IMAGE, width: 1200, height: 630, alt: SITE_NAME }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${SITE_NAME} — Create Premium Marriage Biodata in 2 Minutes`,
+    description: SITE_DESCRIPTION,
+    images: [DEFAULT_OG_IMAGE],
+    creator: TWITTER_HANDLE,
+    site: TWITTER_HANDLE,
+  },
+  verification: {
+    google: "GOOGLE_SITE_VERIFICATION_TOKEN",
+  },
 };
 
 export default function RootLayout({
@@ -23,6 +58,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* Structured Data — Organization, Website, SoftwareApplication */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema()) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema()) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareApplicationSchema()) }} />
         {/* Premium Google Fonts for biodata templates */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
