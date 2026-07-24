@@ -113,6 +113,12 @@ export default function RootLayout({
                 <Link href="/collections" className="text-sm font-medium text-gray-600 hover:text-red-700 transition-colors">
                   Collections
                 </Link>
+                <Link href="/blog" className="text-sm font-medium text-gray-600 hover:text-red-700 transition-colors">
+                  Blog
+                </Link>
+                <Link href="/faq" className="text-sm font-medium text-gray-600 hover:text-red-700 transition-colors">
+                  FAQ
+                </Link>
                 <Link href="/#pricing" className="text-sm font-medium text-gray-600 hover:text-red-700 transition-colors">
                   Pricing
                 </Link>
@@ -159,11 +165,13 @@ export default function RootLayout({
                 </ul>
               </div>
               <div>
-                <h4 className="font-semibold text-white mb-3">Product</h4>
+                <h4 className="font-semibold text-white mb-3">Resources</h4>
                 <ul className="space-y-1.5 text-sm">
-                  {["Pricing", "How It Works", "Template Gallery"].map((item) => (
-                    <li key={item}><Link href="/collections" className="hover:text-amber-400 transition-colors">{item}</Link></li>
-                  ))}
+                  <li><Link href="/blog" className="hover:text-amber-400 transition-colors">Blog</Link></li>
+                  <li><Link href="/faq" className="hover:text-amber-400 transition-colors">FAQ</Link></li>
+                  <li><Link href="/marriage-biodata-maker" className="hover:text-amber-400 transition-colors">Biodata Maker</Link></li>
+                  <li><Link href="/biodata-format-for-marriage" className="hover:text-amber-400 transition-colors">Biodata Formats</Link></li>
+                  <li><Link href="/marriage-biodata-pdf" className="hover:text-amber-400 transition-colors">Biodata PDF</Link></li>
                 </ul>
               </div>
               <div>
