@@ -119,7 +119,7 @@ export default function RootLayout({
                 <Link href="/faq" className="text-sm font-medium text-gray-600 hover:text-red-700 transition-colors">
                   FAQ
                 </Link>
-                <Link href="/#pricing" className="text-sm font-medium text-gray-600 hover:text-red-700 transition-colors">
+                <Link href="/collections#pricing" className="text-sm font-medium text-gray-600 hover:text-red-700 transition-colors">
                   Pricing
                 </Link>
                 <Link
@@ -184,7 +184,7 @@ export default function RootLayout({
               </div>
             </div>
             <div className="border-t border-gray-700 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
-              <p className="text-xs text-gray-500">© 2024 ShaadiBio. All rights reserved. Made with ❤️ in India.</p>
+              <p className="text-xs text-gray-500">© 2026 ShaadiBio. All rights reserved. Made with ❤️ in India.</p>
               <p className="text-xs text-gray-500">Secure payments via Razorpay 🔒</p>
             </div>
           </div>

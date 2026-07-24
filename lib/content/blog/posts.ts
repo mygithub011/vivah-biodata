@@ -14,7 +14,7 @@ export interface BlogPost {
 export const BLOG_POSTS: BlogPost[] = [
   {
     slug: "how-to-create-marriage-biodata",
-    title: "How to Create a Marriage Biodata — Complete Guide 2024",
+    title: "How to Create a Marriage Biodata — Complete Guide 2026",
     description:
       "Learn how to create a perfect marriage biodata step-by-step. What to include, formatting tips, photo guidelines, and common mistakes to avoid.",
     content: `
@@ -55,19 +55,19 @@ A complete marriage biodata should contain:
 ShaadiBio offers 50+ professionally designed templates that handle all the formatting for you. Simply fill in your details, choose a design, and download your HD PDF in minutes.
     `,
     keywords: ["how to create marriage biodata", "marriage biodata guide", "biodata creation tips", "biodata format"],
-    publishedAt: "2024-01-15",
-    updatedAt: "2024-06-01",
+    publishedAt: "2026-01-15",
+    updatedAt: "2026-06-01",
     author: "ShaadiBio Team",
     readingTime: 5,
     relatedSlugs: ["best-marriage-biodata-format", "marriage-biodata-photo-tips"],
   },
   {
     slug: "best-marriage-biodata-format",
-    title: "Best Marriage Biodata Format — Top Formats for 2024",
+    title: "Best Marriage Biodata Format — Top Formats for 2026",
     description:
-      "Discover the best marriage biodata formats for 2024. Compare traditional, modern, and professional formats with examples.",
+      "Discover the best marriage biodata formats for 2026. Compare traditional, modern, and professional formats with examples.",
     content: `
-## Best Marriage Biodata Format for 2024
+## Best Marriage Biodata Format for 2026
 
 Choosing the right format for your marriage biodata can make a significant difference in how your profile is perceived. Here's our guide to the best formats available.
 
@@ -122,8 +122,8 @@ Consider:
 ShaadiBio offers all these formats and more — 50+ templates across 8 collections to match every style.
     `,
     keywords: ["best biodata format", "marriage biodata format", "biodata template format", "modern biodata format"],
-    publishedAt: "2024-02-10",
-    updatedAt: "2024-07-01",
+    publishedAt: "2026-02-10",
+    updatedAt: "2026-07-01",
     author: "ShaadiBio Team",
     readingTime: 6,
     relatedSlugs: ["how-to-create-marriage-biodata", "marriage-biodata-photo-tips"],
@@ -176,8 +176,8 @@ For the best results:
 Our templates support various photo shapes — oval, circle, and rounded square. Upload your best photo and our templates will frame it beautifully.
     `,
     keywords: ["biodata photo tips", "marriage biodata photo", "best photo for biodata", "biodata photo size"],
-    publishedAt: "2024-03-05",
-    updatedAt: "2024-06-15",
+    publishedAt: "2026-03-05",
+    updatedAt: "2026-06-15",
     author: "ShaadiBio Team",
     readingTime: 4,
     relatedSlugs: ["how-to-create-marriage-biodata", "best-marriage-biodata-format"],
@@ -224,8 +224,8 @@ For Hindu biodatas, consider templates with:
 Our Traditional Hindu collection features designs with culturally appropriate motifs, colors, and layouts specifically crafted for Hindu families. The templates include space for all Hindu-specific details.
     `,
     keywords: ["hindu marriage biodata", "hindu biodata format", "hindu biodata template", "hindu matrimonial biodata"],
-    publishedAt: "2024-03-20",
-    updatedAt: "2024-07-10",
+    publishedAt: "2026-03-20",
+    updatedAt: "2026-07-10",
     author: "ShaadiBio Team",
     readingTime: 5,
     relatedSlugs: ["how-to-create-marriage-biodata", "best-marriage-biodata-format"],
@@ -277,7 +277,7 @@ As a groom, your biodata should highlight:
 7. Contact Details
     `,
     keywords: ["marriage biodata for boy", "groom biodata", "boy biodata format", "groom marriage biodata"],
-    publishedAt: "2024-04-10",
+    publishedAt: "2026-04-10",
     author: "ShaadiBio Team",
     readingTime: 4,
     relatedSlugs: ["how-to-create-marriage-biodata", "marriage-biodata-for-girl"],
@@ -325,7 +325,7 @@ As a bride, your biodata should highlight:
 - Partner expectations should be clear but not rigid
     `,
     keywords: ["marriage biodata for girl", "bride biodata", "girl biodata format", "bride marriage biodata"],
-    publishedAt: "2024-04-15",
+    publishedAt: "2026-04-15",
     author: "ShaadiBio Team",
     readingTime: 4,
     relatedSlugs: ["how-to-create-marriage-biodata", "marriage-biodata-for-boy"],
